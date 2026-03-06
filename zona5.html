@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zona 5 Team | Ciclismo Aficionado</title>
+    <style>
+        /* Paleta de colores basada en el logo */
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --primary-blue: #229fd9; /* Azul del logo */
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+
+        /* Navegación */
+        header {
+            background-color: #000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--primary-blue);
+        }
+
+        nav a {
+            color: var(--text-white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Secciones Generales */
+        section {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Tarjetas de Eventos */
+        .grid-eventos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .evento-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 5px solid var(--primary-blue);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .evento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(34, 159, 217, 0.2);
+        }
+
+        .evento-fecha {
+            color: var(--primary-blue);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .evento-titulo {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .evento-badge {
+            display: inline-block;
+            background-color: #333;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        /* Tabla de Clasificación */
+        .tabla-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: var(--primary-blue);
+            color: #000;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .rank-1 { color: gold; font-weight: bold; }
+        .rank-2 { color: silver; font-weight: bold; }
+        .rank-3 { color: #cd7f32; font-weight: bold; }
+
+        /* Modal Detalles Evento */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            border-top: 5px solid var(--primary-blue);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .close-btn:hover { color: var(--text-white); }
+        .detalle-item { margin-bottom: 10px; }
+        .detalle-label { color: var(--primary-blue); font-weight: bold; }
+        
+        .links-container { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .link-btn {
+            background-color: var(--primary-blue);
+            color: #000;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .link-btn:hover { background-color: #1a7ca8; color: #fff; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { display: none; } /* En móvil simplificamos el header por ahora */
+            .logo { font-size: 1.5rem; }
+            h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Z<span>5</span> TEAM</div>
+        <nav>
+            <a href="#eventos">Chequeos 2026</a>
+            <a href="#clasificacion">Clasificación General</a>
+        </nav>
+    </header>
+
+    <section id="eventos">
+        <h2>Chequeos 2026</h2>
+        <div class="grid-eventos" id="contenedor-eventos">
+            </div>
+    </section>
+
+    <section id="clasificacion">
+        <h2>Clasificación General 2026</h2>
+        <div class="tabla-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Ciclista</th>
+                        <th>Puntos Totales</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla">
+                    </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div id="eventoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+            <h3 id="modal-titulo" style="font-size: 2rem; margin-bottom: 15px;"></h3>
+            <p class="detalle-item"><span class="detalle-label">Fecha:</span> <span id="modal-fecha"></span></p>
+            <p class="detalle-item"><span class="detalle-label">Modalidad:</span> <span id="modal-modalidad"></span></p>
+            <p class="detalle-item"><span class="detalle-label">Hándicap:</span> <span id="modal-handicap"></span></p>
+            <p class="detalle-item"><span class="detalle-label">Segmento Subida:</span> <span id="modal-subida"></span></p>
+            <p class="detalle-item"><span class="detalle-label">Segmento Crono:</span> <span id="modal-crono"></span></p>
+            
+            <div class="links-container" id="modal-links">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE EVENTOS ---
+        const eventos = [
+            {
+                fecha: "15/03/26", modalidad: "Individual", evento: "Margaritas", handicap: "Ventaja individual con el PR",
+                subida: "No aplica", crono: "Zipaquirá-Cajicá",
+                links: [{nombre: "Ver Segmento Crono", url: "https://tinyurl.com/bdhkvu33"}]
+            },
+            {
+                fecha: "05/04/26", modalidad: "Individual", evento: "Chiquinquirá", handicap: "Ventaja individual con el PR",
+                subida: "Tierra Negra y Palestina", crono: "No aplica",
+                links: [{nombre: "Enlace Subida 1", url: "https://tinyurl.com/nac7ypu5"}, {nombre: "Enlace Subida 2", url: "https://tinyurl.com/y9wbymev"}]
+            },
+            {
+                fecha: "17/05/26", modalidad: "Equipos", evento: "Neusa-Margaritas", handicap: "Suma de tiempos",
+                subida: "Neusa", crono: "No aplica",
+                links: [{nombre: "Enlace Subida", url: "https://tinyurl.com/mhjhcue3"}]
+            },
+            {
+                fecha: "20/07/26", modalidad: "Individual", evento: "Colombia Challenge", handicap: "Ventaja individual con el PR",
+                subida: "Romeral", crono: "No aplica",
+                links: [{nombre: "Enlace Subida", url: "https://tinyurl.com/y79533x3"}]
+            },
+            {
+                fecha: "07/08/26", modalidad: "Individual", evento: "Batalla de Boyacá", handicap: "Ventaja individual con el PR",
+                subida: "Sisga", crono: "Briceño-Almaviva",
+                links: [{nombre: "Enlace Subida", url: "https://tinyurl.com/3jvmk6z4"}, {nombre: "Enlace Crono", url: "https://tinyurl.com/yyjanar6"}]
+            },
+            {
+                fecha: "27/09/26", modalidad: "Equipos", evento: "Cuchilla", handicap: "Suma de tiempos",
+                subida: "Cuchilla", crono: "Briceño-Almaviva",
+                links: [{nombre: "Enlace Subida", url: "https://tinyurl.com/467vknex"}, {nombre: "Enlace Crono", url: "https://tinyurl.com/yyjanar6"}]
+            },
+            {
+                fecha: "18/10/26", modalidad: "Individual", evento: "La Vega", handicap: "Ventaja individual con el PR",
+                subida: "La Vega", crono: "No aplica",
+                links: [{nombre: "Enlace Subida", url: "https://tinyurl.com/mrxx5uny"}]
+            }
+        ];
+
+        // --- BASE DE DATOS DE MIEMBROS (Modifica los puntos aquí) ---
+        // Se ordenarán automáticamente de mayor a menor puntaje
+        const miembros = [
+            { nombre: "Jaime Beltrán", puntos: 150 },
+            { nombre: "Sergio Esteban García", puntos: 120 },
+            { nombre: "Simon Balsero", puntos: 90 },
+            { nombre: "Javier Balsero", puntos: 0 },
+            { nombre: "Mateo Nuñez", puntos: 0 },
+            { nombre: "Juan Carlos García", puntos: 0 },
+            { nombre: "Jonathan Bernal", puntos: 0 },
+            { nombre: "Alvaro González", puntos: 0 },
+            { nombre: "Daniel Rodriguez", puntos: 0 },
+            { nombre: "Daniel Segura", puntos: 0 },
+            { nombre: "Yesid Baron", puntos: 0 },
+            { nombre: "Sebastián García Llano", puntos: 0 }
+        ];
+
+        // --- RENDERIZAR EVENTOS ---
+        const contenedorEventos = document.getElementById('contenedor-eventos');
+        eventos.forEach((ev, index) => {
+            const card = document.createElement('div');
+            card.className = 'evento-card';
+            card.onclick = () => abrirModal(index);
+            card.innerHTML = `
+                <div class="evento-fecha">🗓️ ${ev.fecha}</div>
+                <h3 class="evento-titulo">${ev.evento}</h3>
+                <div class="evento-badge">🚲 ${ev.modalidad}</div>
+                <p style="color: var(--text-gray); font-size: 0.9rem;">Clic para ver detalles y segmentos</p>
+            `;
+            contenedorEventos.appendChild(card);
+        });
+
+        // --- RENDERIZAR CLASIFICACIÓN ---
+        const cuerpoTabla = document.getElementById('cuerpo-tabla');
+        // Ordenar miembros por puntos (descendente)
+        miembros.sort((a, b) => b.puntos - a.puntos);
+        
+        miembros.forEach((miembro, index) => {
+            let rankClass = '';
+            let corona = '';
+            if (index === 0) { rankClass = 'rank-1'; corona = ' 🥇'; }
+            if (index === 1) { rankClass = 'rank-2'; corona = ' 🥈'; }
+            if (index === 2) { rankClass = 'rank-3'; corona = ' 🥉'; }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="${rankClass}">#${index + 1}</td>
+                <td style="font-weight: 500;">${miembro.nombre}${corona}</td>
+                <td style="font-weight: bold; color: var(--primary-blue);">${miembro.puntos} pts</td>
+            `;
+            cuerpoTabla.appendChild(tr);
+        });
+
+        // --- LÓGICA DEL MODAL ---
+        const modal = document.getElementById('eventoModal');
+        
+        function abrirModal(index) {
+            const ev = eventos[index];
+            document.getElementById('modal-titulo').innerText = ev.evento;
+            document.getElementById('modal-fecha').innerText = ev.fecha;
+            document.getElementById('modal-modalidad').innerText = ev.modalidad;
+            document.getElementById('modal-handicap').innerText = ev.handicap;
+            document.getElementById('modal-subida').innerText = ev.subida;
+            document.getElementById('modal-crono').innerText = ev.crono;
+
+            const linksContainer = document.getElementById('modal-links');
+            linksContainer.innerHTML = '';
+            if(ev.links) {
+                ev.links.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url;
+                    a.target = "_blank"; // Abre en nueva pestaña
+                    a.className = "link-btn";
+                    a.innerText = link.nombre;
+                    linksContainer.appendChild(a);
+                });
+            }
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            modal.style.display = 'none';
+        }
+
+        // Cerrar modal haciendo clic afuera
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+    </script>
+</body>
+</html>
