@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Evento | Zona 5 Team</title>
+    <style>
+        /* Paleta de colores basada en el logo */
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --primary-blue: #229fd9;
+            /* Azul del logo */
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+
+        /* Navegación */
+        header {
+            background-color: #000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--text-white);
+        }
+
+        .logo span {
+            color: var(--primary-blue);
+        }
+
+        nav a {
+            color: var(--text-white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Secciones Generales */
+        section {
+            padding: 2rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detalle-container {
+            background-color: var(--bg-card);
+            padding: 30px;
+            border-radius: 8px;
+            border-top: 5px solid var(--primary-blue);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .actions-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-blue);
+            color: #000;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #1a7ca8;
+            color: #fff;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: #000;
+        }
+
+        .detalle-item {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .detalle-label {
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .links-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Tabla de Resultados */
+        .tabla-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: var(--primary-blue);
+            color: #000;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .rank-1 {
+            color: gold;
+            font-weight: bold;
+        }
+
+        .rank-2 {
+            color: silver;
+            font-weight: bold;
+        }
+
+        .rank-3 {
+            color: #cd7f32;
+            font-weight: bold;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-gray);
+            font-style: italic;
+        }
+
+        #mensaje-copiado {
+            display: none;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Not found */
+        .not-found {
+            text-align: center;
+            padding: 5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .actions-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Z<span>5</span> TEAM</a>
+        <nav>
+            <a href="index.html">Volver al Inicio</a>
+        </nav>
+    </header>
+
+    <section id="contenido-evento">
+        <div class="actions-container">
+            <a href="index.html" class="btn btn-outline">← Volver</a>
+            <div style="display:flex; align-items:center;">
+                <button class="btn" onclick="compartirUrl()">🔗 Compartir Evento</button>
+                <span id="mensaje-copiado">¡Enlace copiado!</span>
+            </div>
+        </div>
+
+        <div id="evento-detalles" style="display: none;">
+            <h2 id="evento-titulo"></h2>
+            <div class="detalle-container">
+                <p class="detalle-item"><span class="detalle-label">Fecha:</span> <span id="evento-fecha"></span></p>
+                <p class="detalle-item"><span class="detalle-label">Modalidad:</span> <span
+                        id="evento-modalidad"></span></p>
+                <p class="detalle-item"><span class="detalle-label">Hándicap:</span> <span id="evento-handicap"></span>
+                </p>
+                <p class="detalle-item"><span class="detalle-label">Segmento Subida:</span> <span
+                        id="evento-subida"></span></p>
+                <p class="detalle-item"><span class="detalle-label">Segmento Crono:</span> <span
+                        id="evento-crono"></span></p>
+
+                <div class="links-container" id="evento-links">
+                </div>
+            </div>
+
+            <h3 style="color: var(--primary-blue); margin-bottom: 1rem; font-size: 1.8rem;">Resultados del Evento</h3>
+            <div class="tabla-container">
+                <table id="tabla-resultados">
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Ciclista</th>
+                            <th>Tiempo</th>
+                            <th>Puntos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-resultados">
+                    </tbody>
+                </table>
+                <div id="no-resultados" class="no-results" style="display: none;">
+                    Aún no hay resultados para este evento.
+                </div>
+            </div>
+        </div>
+
+        <div id="evento-no-encontrado" class="not-found" style="display: none;">
+            <h2>Evento no encontrado</h2>
+            <p>El evento que buscas no existe o la URL es incorrecta.</p>
+        </div>
+
+    </section>
+
+    <!-- Importar datos -->
+    <script src="js/data.js"></script>
+    <script>
+        // Obtener el ID de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventoId = urlParams.get('id');
+
+        // Buscar el evento
+        const eventoData = eventos.find(e => e.id === eventoId);
+
+        if (eventoData) {
+            // Mostrar contenedor
+            document.getElementById('evento-detalles').style.display = 'block';
+
+            // Llenar detalles
+            document.getElementById('evento-titulo').innerText = eventoData.evento;
+            document.getElementById('evento-fecha').innerText = eventoData.fecha;
+            document.getElementById('evento-modalidad').innerText = eventoData.modalidad;
+            document.getElementById('evento-handicap').innerText = eventoData.handicap;
+            document.getElementById('evento-subida').innerText = eventoData.subida;
+            document.getElementById('evento-crono').innerText = eventoData.crono;
+
+            // Links
+            const linksContainer = document.getElementById('evento-links');
+            if (eventoData.links && eventoData.links.length > 0) {
+                eventoData.links.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url;
+                    a.target = "_blank"; // Abre en nueva pestaña
+                    a.className = "btn";
+                    a.innerText = link.nombre;
+                    linksContainer.appendChild(a);
+                });
+            }
+
+            // Resultados
+            const cuerpoResultados = document.getElementById('cuerpo-resultados');
+            if (eventoData.resultados && eventoData.resultados.length > 0) {
+                // Ordenar por tiempo (opcional, asumiendo que ya vienen ordenados o se ordenan por posición)
+                // Usando 'pos' para dibujar
+                eventoData.resultados.forEach(res => {
+                    let rankClass = '';
+                    let corona = '';
+                    if (res.pos === 1) { rankClass = 'rank-1'; corona = ' 🥇'; }
+                    if (res.pos === 2) { rankClass = 'rank-2'; corona = ' 🥈'; }
+                    if (res.pos === 3) { rankClass = 'rank-3'; corona = ' 🥉'; }
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="${rankClass}">#${res.pos}</td>
+                        <td style="font-weight: 500;">${res.nombre}${corona}</td>
+                        <td>${res.tiempo || "-"}</td>
+                        <td style="font-weight: bold; color: var(--primary-blue);">${res.puntos} pts</td>
+                    `;
+                    cuerpoResultados.appendChild(tr);
+                });
+            } else {
+                document.getElementById('tabla-resultados').style.display = 'none';
+                document.getElementById('no-resultados').style.display = 'block';
+            }
+
+        } else {
+            // Mostrar error si no se encuentra
+            document.getElementById('evento-no-encontrado').style.display = 'block';
+        }
+
+        // Función para compartir URL
+        function compartirUrl() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                const msj = document.getElementById('mensaje-copiado');
+                msj.style.display = 'inline';
+                setTimeout(() => {
+                    msj.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+                alert("No se pudo copiar el enlace automáticamente. Puedes copiar la URL del navegador.");
+            });
+        }
+    </script>
+</body>
+
+</html>
