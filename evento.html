@@ -310,73 +310,81 @@
 
     </section>
 
-    <!-- Importar datos -->
     <script src="js/data.js"></script>
     <script>
-        // Obtener el ID de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventoId = urlParams.get('id');
+        async function cargarDetalleEvento() {
+            // Esperar a que los datos se carguen del Sheets
+            await Z5Data.init();
 
-        // Buscar el evento
-        const eventoData = eventos.find(e => e.id === eventoId);
+            // Obtener el ID de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventoId = urlParams.get('id');
 
-        if (eventoData) {
-            // Mostrar contenedor
-            document.getElementById('evento-detalles').style.display = 'block';
+            // Buscar el evento usando el nuevo motor
+            const eventoData = Z5Data.getEventoById(eventoId);
 
-            // Llenar detalles
-            document.getElementById('evento-titulo').innerText = eventoData.evento;
-            document.getElementById('evento-fecha').innerText = eventoData.fecha;
-            document.getElementById('evento-modalidad').innerText = eventoData.modalidad;
-            document.getElementById('evento-handicap').innerText = eventoData.handicap;
-            document.getElementById('evento-subida').innerText = eventoData.subida;
-            document.getElementById('evento-crono').innerText = eventoData.crono;
+            if (eventoData) {
+                // Mostrar contenedor
+                document.getElementById('evento-detalles').style.display = 'block';
 
-            // Links
-            const linksContainer = document.getElementById('evento-links');
-            if (eventoData.links && eventoData.links.length > 0) {
-                eventoData.links.forEach(link => {
-                    const a = document.createElement('a');
-                    a.href = link.url;
-                    a.target = "_blank"; // Abre en nueva pestaña
-                    a.className = "btn";
-                    a.innerText = link.nombre;
-                    linksContainer.appendChild(a);
-                });
-            }
+                // Llenar detalles
+                document.getElementById('evento-titulo').innerText = eventoData.evento;
+                document.getElementById('evento-fecha').innerText = eventoData.fecha;
+                document.getElementById('evento-modalidad').innerText = eventoData.modalidad;
+                document.getElementById('evento-handicap').innerText = eventoData.handicap;
+                document.getElementById('evento-subida').innerText = eventoData.subida;
+                document.getElementById('evento-crono').innerText = eventoData.crono;
 
-            // Resultados
-            const cuerpoResultados = document.getElementById('cuerpo-resultados');
-            if (eventoData.resultados && eventoData.resultados.length > 0) {
-                // Ordenar por tiempo (opcional, asumiendo que ya vienen ordenados o se ordenan por posición)
-                // Usando 'pos' para dibujar
-                eventoData.resultados.forEach(res => {
-                    let rankClass = '';
-                    let corona = '';
-                    if (res.pos === 1) { rankClass = 'rank-1'; corona = ' 🥇'; }
-                    if (res.pos === 2) { rankClass = 'rank-2'; corona = ' 🥈'; }
-                    if (res.pos === 3) { rankClass = 'rank-3'; corona = ' 🥉'; }
+                // Links
+                const linksContainer = document.getElementById('evento-links');
+                linksContainer.innerHTML = ''; // Limpiar
+                if (eventoData.links && eventoData.links.length > 0) {
+                    eventoData.links.forEach(link => {
+                        const a = document.createElement('a');
+                        a.href = link.url;
+                        a.target = "_blank"; // Abre en nueva pestaña
+                        a.className = "btn";
+                        a.innerText = link.nombre;
+                        linksContainer.appendChild(a);
+                    });
+                }
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="${rankClass}">#${res.pos}</td>
-                        <td style="font-weight: 500;">${res.nombre}${corona}</td>
-                        <td>${res.tiempo || "-"}</td>
-                        <td style="font-weight: bold; color: var(--primary-blue);">${res.puntos} pts</td>
-                    `;
-                    cuerpoResultados.appendChild(tr);
-                });
+                // Resultados
+                const cuerpoResultados = document.getElementById('cuerpo-resultados');
+                cuerpoResultados.innerHTML = ''; // Limpiar
+                if (eventoData.resultados && eventoData.resultados.length > 0) {
+                    // El motor de Z5Data ya entrega los resultados ordenados por puntos y tiempo
+                    eventoData.resultados.forEach(res => {
+                        let rankClass = '';
+                        let corona = '';
+                        if (res.pos === 1) { rankClass = 'rank-1'; corona = ' 🥇'; }
+                        if (res.pos === 2) { rankClass = 'rank-2'; corona = ' 🥈'; }
+                        if (res.pos === 3) { rankClass = 'rank-3'; corona = ' 🥉'; }
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="${rankClass}">#${res.pos}</td>
+                            <td style="font-weight: 500;">${res.nombre}${corona}</td>
+                            <td>${res.tiempo || "-"}</td>
+                            <td style="font-weight: bold; color: var(--primary-blue);">${res.puntos} pts</td>
+                        `;
+                        cuerpoResultados.appendChild(tr);
+                    });
+                } else {
+                    document.getElementById('tabla-resultados').style.display = 'none';
+                    document.getElementById('no-resultados').style.display = 'block';
+                }
+
             } else {
-                document.getElementById('tabla-resultados').style.display = 'none';
-                document.getElementById('no-resultados').style.display = 'block';
+                // Mostrar error si no se encuentra
+                document.getElementById('evento-no-encontrado').style.display = 'block';
             }
-
-        } else {
-            // Mostrar error si no se encuentra
-            document.getElementById('evento-no-encontrado').style.display = 'block';
         }
 
-        // Función para compartir URL
+        // Ejecutar al cargar
+        cargarDetalleEvento();
+
+        // Función para compartir URL (se mantiene igual)
         function compartirUrl() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {

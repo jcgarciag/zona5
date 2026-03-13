@@ -221,43 +221,52 @@
 
     <script src="js/data.js"></script>
     <script>
+        async function renderizarPagina() {
+            // Esperar a que los datos se carguen del Sheets
+            await Z5Data.init();
 
-        // --- RENDERIZAR EVENTOS ---
-        const contenedorEventos = document.getElementById('contenedor-eventos');
-        eventos.forEach((ev, index) => {
-            const card = document.createElement('div');
-            card.className = 'evento-card';
-            card.onclick = () => window.location.href = `evento.html?id=${ev.id}`;
-            card.innerHTML = `
-                <div class="evento-fecha">🗓️ ${ev.fecha}</div>
-                <h3 class="evento-titulo">${ev.evento}</h3>
-                <div class="evento-badge">🚲 ${ev.modalidad}</div>
-                <p style="color: var(--text-gray); font-size: 0.9rem;">Clic para ver detalles y segmentos</p>
-            `;
-            contenedorEventos.appendChild(card);
-        });
+            const eventos = Z5Data.getEventos();
+            const miembros = Z5Data.getMiembros();
 
-        // --- RENDERIZAR CLASIFICACIÓN ---
-        const cuerpoTabla = document.getElementById('cuerpo-tabla');
-        // Ordenar miembros por puntos (descendente)
-        miembros.sort((a, b) => b.puntos - a.puntos);
+            // --- RENDERIZAR EVENTOS ---
+            const contenedorEventos = document.getElementById('contenedor-eventos');
+            contenedorEventos.innerHTML = ''; // Limpiar
+            eventos.forEach((ev) => {
+                const card = document.createElement('div');
+                card.className = 'evento-card';
+                card.onclick = () => window.location.href = `evento.html?id=${ev.id}`;
+                card.innerHTML = `
+                    <div class="evento-fecha">🗓️ ${ev.fecha}</div>
+                    <h3 class="evento-titulo">${ev.evento}</h3>
+                    <div class="evento-badge">🚲 ${ev.modalidad}</div>
+                    <p style="color: var(--text-gray); font-size: 0.9rem;">Clic para ver detalles y segmentos</p>
+                `;
+                contenedorEventos.appendChild(card);
+            });
 
-        miembros.forEach((miembro, index) => {
-            let rankClass = '';
-            let corona = '';
-            if (index === 0) { rankClass = 'rank-1'; corona = ' 🥇'; }
-            if (index === 1) { rankClass = 'rank-2'; corona = ' 🥈'; }
-            if (index === 2) { rankClass = 'rank-3'; corona = ' 🥉'; }
+            // --- RENDERIZAR CLASIFICACIÓN ---
+            const cuerpoTabla = document.getElementById('cuerpo-tabla');
+            cuerpoTabla.innerHTML = ''; // Limpiar
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="${rankClass}">#${index + 1}</td>
-                <td style="font-weight: 500;">${miembro.nombre}${corona}</td>
-                <td style="font-weight: bold; color: var(--primary-blue);">${miembro.puntos} pts</td>
-            `;
-            cuerpoTabla.appendChild(tr);
-        });
+            miembros.forEach((miembro, index) => {
+                let rankClass = '';
+                let corona = '';
+                if (index === 0) { rankClass = 'rank-1'; corona = ' 🥇'; }
+                if (index === 1) { rankClass = 'rank-2'; corona = ' 🥈'; }
+                if (index === 2) { rankClass = 'rank-3'; corona = ' 🥉'; }
 
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="${rankClass}">#${index + 1}</td>
+                    <td style="font-weight: 500;">${miembro.nombre}${corona}</td>
+                    <td style="font-weight: bold; color: var(--primary-blue);">${miembro.puntos} pts</td>
+                `;
+                cuerpoTabla.appendChild(tr);
+            });
+        }
+
+        // Ejecutar al cargar
+        renderizarPagina();
     </script>
 </body>
 
