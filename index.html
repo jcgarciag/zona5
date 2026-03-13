@@ -168,7 +168,55 @@
             font-weight: bold;
         }
 
-        /* Responsive */
+        /* Reglas de puntuación */
+        .reglas-container {
+            margin-top: 3rem;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 30px;
+            border-top: 2px solid var(--primary-blue);
+        }
+
+        .reglas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .regla-item h4 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+
+        .regla-item p,
+        .regla-item li {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .puntos-f1 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .punto-card {
+            background-color: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-white);
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
         @media (max-width: 768px) {
             nav {
                 display: none;
@@ -216,6 +264,39 @@
                 <tbody id="cuerpo-tabla">
                 </tbody>
             </table>
+        </div>
+        <div class="reglas-container">
+            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; text-align: center;">¿Cómo funciona la
+                puntuación?</h3>
+            <div class="reglas-grid">
+                <div class="regla-item">
+                    <h4>🏁 Puntuación F1</h4>
+                    <p>En cada evento, los 10 primeros clasificados suman puntos para el ranking general:</p>
+                    <div class="puntos-f1">
+                        <span class="punto-card">1º: 25</span>
+                        <span class="punto-card">2º: 18</span>
+                        <span class="punto-card">3º: 15</span>
+                        <span class="punto-card">4º: 12</span>
+                        <span class="punto-card">5º: 10</span>
+                        <span class="punto-card">6º: 8</span>
+                        <span class="punto-card">7º: 6</span>
+                        <span class="punto-card">8º: 4</span>
+                        <span class="punto-card">9º: 2</span>
+                        <span class="punto-card">10º: 1</span>
+                    </div>
+                </div>
+                <div class="regla-item">
+                    <h4>⏱️ Chequeos Individuales</h4>
+                    <p>Se compite bajo modalidad de <strong>hándicap vs PR</strong>. El ganador es quien logre descontar
+                        más tiempo respecto a su récord personal (PR) en el segmento. Una diferencia negativa significa
+                        que bajaste tu récord.</p>
+                </div>
+                <div class="regla-item">
+                    <h4>👥 Chequeos por Equipos</h4>
+                    <p>Se suma el tiempo total de todos los integrantes del equipo en los segmentos definidos. El equipo
+                        con menor tiempo total gana el evento y sus puntos se asignan a cada integrante.</p>
+                </div>
+            </div>
         </div>
     </section>
 
