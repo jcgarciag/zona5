@@ -13,7 +13,7 @@ const LISTA_MIEMBROS_INICIAL = [
     "Jaime Beltrán", "Diego Gutiérrez", "Richar Ávila", "Jaiber Dávila",
     "Tatán Bernal", "Carlos Aristizábal", "Carlos Bicicota", "Daniel Segura",
     "Fernando Segura", "Julián García", "Omar Mora", "Óscar Cuervo",
-    "Sebastián García", "Yesid Barón", "Andrés Moreno"
+    "Sebastián García", "Yesid Barón", "Andrés Moreno", "Sergio Esteban García"
 ];
 
 let eventos = [];
