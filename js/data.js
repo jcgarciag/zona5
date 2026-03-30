@@ -43,18 +43,43 @@ function segundosATiempo(segundos, mostrarSigno = false) {
 }
 
 function csvToJSON(csv) {
-    const lines = csv.split("\n");
+    const lines = csv.split(/\r?\n/);
     if (lines.length === 0) return [];
+    
+    // Función para separar por comas respetando comillas
+    const splitByCommas = (str) => {
+        const result = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < str.length; i++) {
+            const char = str[i];
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) {
+                result.push(cur.trim());
+                cur = '';
+            } else {
+                cur += char;
+            }
+        }
+        result.push(cur.trim());
+        return result;
+    };
+
+    const headers = splitByCommas(lines[0]);
     const result = [];
-    const headers = lines[0].split(",").map(h => h.trim().replace(/"/g, ''));
 
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
-        const currentline = line.split(",");
+        
+        const currentline = splitByCommas(line);
         const obj = {};
         headers.forEach((header, index) => {
-            obj[header] = currentline[index] ? currentline[index].trim().replace(/"/g, '') : "";
+            const head = header.replace(/"/g, '');
+            let val = currentline[index] || "";
+            // Limpiar comillas residuales y espacios
+            val = val.replace(/^"|"$/g, '').trim();
+            obj[head] = val;
         });
         result.push(obj);
     }
@@ -87,13 +112,16 @@ async function cargarDatos() {
                 rawEvRes.forEach(r => {
                     const ciclista = r.Ciclista;
                     if (!porCiclista[ciclista]) porCiclista[ciclista] = { nombre: ciclista, difTotal: 0, tiempos: [] };
-
+                    
                     const t = tiempoASegundos(r.Tiempo);
                     const pr = tiempoASegundos(r.PR);
-
+                    const nombreSegmento = r.Segmento || r.Sermento || ""; // Manejar posibles typos
+                    
                     if (t !== null && pr !== null) {
                         porCiclista[ciclista].difTotal += (t - pr);
-                        porCiclista[ciclista].tiempos.push(segundosATiempo(t));
+                        // Mostrar el segmento en negrita seguido del tiempo
+                        const label = nombreSegmento ? `<span style="color:var(--text-gray); font-size:0.8rem;">${nombreSegmento}:</span> ${segundosATiempo(t)}` : segundosATiempo(t);
+                        porCiclista[ciclista].tiempos.push(label);
                     }
                 });
                 // Ganador: el que más tiempo descuente (menor diferencia total)
@@ -123,7 +151,7 @@ async function cargarDatos() {
                     resultadosFinales.push({
                         pos: i + 1,
                         nombre: p.nombre,
-                        tiempo: p.tiempos.join(" / "),
+                        tiempo: p.tiempos.join("<br>"),
                         infoExtra: segundosATiempo(p.difTotal, true), // Dif vs PR
                         puntos: pts
                     });
