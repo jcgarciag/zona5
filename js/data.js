@@ -143,24 +143,27 @@ async function cargarDatos() {
                 procesados = Object.values(porEquipo).sort((a, b) => a.tiempoTotal - b.tiempoTotal);
             }
 
-            // Asignar Posiciones y Puntos F1
+            // Asignar Posiciones y Puntos F1 + Participación
+            const PUNTOS_PARTICIPACION = 5;
             const resultadosFinales = [];
             procesados.forEach((p, i) => {
-                const pts = PUNTOS_F1[i] || 0;
+                const ptsPosicion = PUNTOS_F1[i] || 0;
+                const ptsTotal = ptsPosicion + PUNTOS_PARTICIPACION;
+
                 if (esIndividual) {
                     resultadosFinales.push({
                         pos: i + 1,
                         nombre: p.nombre,
                         tiempo: p.tiempos.join("<br>"),
                         infoExtra: segundosATiempo(p.difTotal, true), // Dif vs PR
-                        puntos: pts
+                        puntos: ptsTotal
                     });
                     // Sumar a la general
-                    if (puntosHistoricos[p.nombre] !== undefined) puntosHistoricos[p.nombre] += pts;
+                    if (puntosHistoricos[p.nombre] !== undefined) puntosHistoricos[p.nombre] += ptsTotal;
                 } else {
                     // En equipos, todos los miembros reciben los puntos del equipo
                     p.miembros.forEach(m => {
-                        if (puntosHistoricos[m] !== undefined) puntosHistoricos[m] += pts;
+                        if (puntosHistoricos[m] !== undefined) puntosHistoricos[m] += ptsTotal;
                     });
                     resultadosFinales.push({
                         pos: i + 1,
@@ -168,7 +171,7 @@ async function cargarDatos() {
                         integrantes: p.miembros.join(", "),
                         tiempo: segundosATiempo(p.tiempoTotal),
                         infoExtra: "Team Total",
-                        puntos: pts
+                        puntos: ptsTotal
                     });
                 }
             });
